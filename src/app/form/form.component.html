@@ -1,20 +1,23 @@
 
-<form novalidate [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+<form novalidate [formGroup]="profileForm">
     <div>
-        <label for="name">Username</label><br>
-        <input type="text" id="name" formControlName="username" [(ngModel)]="model.username"><br><br>
-        <!-- <div class="form-control-feedback"
-             *ngIf="username.errors && (username.dirty || username.touched)">
-            <p *ngIf="username.errors.required">Last name is required</p>
-        </div> -->
-        <label for="email">Email</label><br>
-        <input type="email" id="email" formControlName="email"><br><br>
-        <!-- <p *ngIf="email.errors.required">Email is required</p> -->
-        <label for="gender">Gender</label><br>
-        <input type="radio" id="male" name="maleGender" value="male" formControlName="maleGender">
+        <label>Username</label>
+        <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+                <!-- <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback"> -->
+                    <div *ngIf="profileForm.controls.username.hasError('required')">Username is required</div>
+                <!-- </div> -->
+        <label>Email</label>
+        <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+                <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                    <div *ngIf="profileForm.controls.email.hasError('required')">Email is required</div><br>
+                    <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+                </div>
+        <label>Gender</label><br>
+        <input type="radio" id="male" name="gender" value="male" formControlName="gender">
         <label for="male">Male</label><br>
-        <input type="radio" id="female" name="femaleGender" value="female" formControlName="femaleGender">
+        <input type="radio" id="female" name="gender" value="female" formControlName="gender">
         <label for="female">Female</label><br><br>
+        <div *ngIf="profileForm.controls.gender.hasError('required')">Gender is required</div>
 
     </div>
     <div>
@@ -23,111 +26,15 @@
         <input type="file" id="avatar" formControlName="avatar"><br><br>
         <label for="mobile">Mobile number</label><br>
         <input type="text" id="mobile" formControlName="mobile"><br><br>
+        <div *ngIf="profileForm.controls.mobile.hasError('required')">Mobile is required</div>
     </div>
     <div>
         <label for="password">Password</label><br>
         <input type="password" id="password" formControlName="password"><br><br>
+        <div *ngIf="profileForm.controls.password.hasError('required')">Password is required</div>
         <label for="password-confirm">Confirm your Password</label><br>
         <input type="password" id="password-confirm" formControlName="passwordConfirm"><br><br>
     </div>
   </form>
-  <button type="submit" [disabled]="!profileForm.valid">Submit</button>
+  <button type="submit">Submit</button>
 
-  
-  <!-- <form novalidate
-  (ngSubmit)="onSubmit()"
-  #f="ngForm">
-<fieldset ngModelGroup="name">
-    <div class="form-group"
-         [ngClass]="{
-    'has-danger': firstName.invalid && (firstName.dirty || firstName.touched),
-    'has-success': firstName.valid && (firstName.dirty || firstName.touched)
-}">
-        <label>First Name</label>
-        <input type="text"
-               class="form-control"
-               name="firstName"
-               [(ngModel)]="model.firstName"
-               required
-               #firstName="ngModel">
-        <div class="form-control-feedback"
-             *ngIf="firstName.errors && (firstName.dirty || firstName.touched)">
-            <p *ngIf="firstName.errors.required">First name is required</p>
-        </div>
-    </div>
-    <div class="form-group"
-         [ngClass]="{
-    'has-danger': lastName.invalid && (lastName.dirty || lastName.touched),
-    'has-success': lastName.valid && (lastName.dirty || lastName.touched)
-}">
-        <label>Last Name</label>
-        <input type="text"
-               class="form-control"
-               name="lastName"
-               [(ngModel)]="model.lastName"
-               required
-               #lastName="ngModel">
-        <div class="form-control-feedback"
-             *ngIf="lastName.errors && (lastName.dirty || lastName.touched)">
-            <p *ngIf="lastName.errors.required">Last name is required</p>
-        </div>
-    </div>
-</fieldset>
-<div class="form-group"
-     [ngClass]="{
-    'has-danger': email.invalid && (email.dirty || email.touched),
-    'has-success': email.valid && (email.dirty || email.touched)
-}">
-    <label>Email</label>
-    <input type="email"
-           class="form-control"
-           name="email"
-           [(ngModel)]="model.email"
-           required
-           pattern="[^ @]*@[^ @]*"
-           emailDomain
-           #email="ngModel">
-    <div class="form-control-feedback"
-         *ngIf="email.errors && (email.dirty || email.touched)">
-        <p *ngIf="email.errors.required">Email is required</p>
-        <p *ngIf="email.errors.pattern">Email must contain at least the @ character</p>
-        <p *ngIf="email.errors.emailDomain">Email must be on the codecraft.tv domain</p>
-        <p *ngIf="email.errors.emailDomain">Email must be on the {{ email.errors.emailDomain.requiredDomain }} domain</p>
-    </div>
-</div>
-<div class="form-group"
-     [ngClass]="{
-    'has-danger': password.invalid && (password.dirty || password.touched),
-    'has-success': password.valid && (password.dirty || password.touched)
-}">
-    <label>Password</label>
-    <input type="password"
-           class="form-control"
-           name="password"
-           [(ngModel)]="model.password"
-           required
-           minlength="8"
-           #password="ngModel">
-    <div class="form-control-feedback"
-         *ngIf="password.errors && (password.dirty || password.touched)">
-        <p *ngIf="password.errors.required">Password is required</p>
-        <p *ngIf="password.errors.minlength">Password must be at least 8 characters long</p>
-    </div>
-</div>
-<div class="form-group">
-    <label>Language</label>
-    <select class="form-control"
-            name="language"
-            [(ngModel)]="model.language">
-        <option value="">Please select a language</option>
-        <option *ngFor="let lang of langs"
-                [value]="lang">{{lang}}
-        </option>
-    </select>
-</div>
-<button type="submit"
-        class="btn btn-primary"
-        [disabled]="f.invalid">Submit
-</button>
-<pre>{{f.value | json}}</pre>
-</form> -->
